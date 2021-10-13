@@ -86,4 +86,9 @@ public class Board {
     public boolean check4Placement(char symbol) {
         return checkHorizontal(symbol) || checkVertical(symbol);
     }
+
+    public boolean isFullColumn(int position) {
+        char boardValue = board[0][position - 1];
+        return boardValue == player1Symbol || boardValue == player2Symbol;
+    }
 }

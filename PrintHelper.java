@@ -16,4 +16,12 @@ public class PrintHelper {
     public static void integerOnlyMsg() {
         System.out.println("Integers only, please.");
     }
+
+    public static void showTurnMsg(String playerName) {
+        System.out.println("It's " + playerName + "'s turn.");
+    }
+
+    public static void displayErrorUnabledPut() {
+        System.out.println("This row is full and unabled to put. Please try again.");
+    }
 }
