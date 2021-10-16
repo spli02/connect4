@@ -59,40 +59,34 @@ public class Board {
                 }
             }
         }
-
     }
 
     public boolean checkHorizontal(char symbol) {
-        boolean hasWon = false;
         int count = 0;
-
         for (int i = 0; i < board.length; i++) {
             for (int j = 0; j < board[i].length; j++) {
                 if (board[i][j] == symbol) {
                     count = count + 1;
                     if (count >= 4) {
-                        hasWon = true;
+                        return true;
                     }
                 } else {
                     count = 0;
                 }
             }
-
         }
 
-        return hasWon;
+        return false;
     }
 
     public boolean checkVertical(char symbol) {
-        boolean hasWon = false;
         int count = 0;
-
         for (int i = 0; i < board[0].length; i++) {
             for (int j = 0; j < board.length; j++) {
                 if (board[j][i] == symbol) {
                     count = count + 1;
                     if (count >= 4) {
-                        hasWon = true;
+                        return true;
                     }
                 } else {
                     count = 0;
@@ -100,12 +94,43 @@ public class Board {
             }
         }
 
-        return hasWon;
+        return false;
+    }
+
+    public boolean checkDiagonal(char symbol, boolean isRightDiagonal) {
+        int count = 0;
+        for (int i = 0; i < board.length - 1; i++) {
+            for (int j = 0; j < board[0].length - 1; j++) {
+                count = 0;
+                for (int offset = 0; offset < 4; offset++) {
+                    int row = i + offset;
+                    int col = isRightDiagonal ? j - offset : j + offset;
+
+                    if (row < 0 || row > board.length - 1) {
+                        break;
+                    }
+                    if (col < 0 || col > board[0].length - 1) {
+                        break;
+                    }
+
+                    if (board[row][col] == symbol) {
+                        count++;
+
+                        if (count >= 4) {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+
+        return false;
     }
 
     public boolean check4Placement(int playerIndex) {
         char playerSymbol = playerSymbols[playerIndex];
-        return checkHorizontal(playerSymbol) || checkVertical(playerSymbol);
+        return checkHorizontal(playerSymbol) || checkVertical(playerSymbol) || checkDiagonal(playerSymbol, true)
+                || checkDiagonal(playerSymbol, false);
     }
 
     public boolean isFullColumn(int position) {
