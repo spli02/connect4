@@ -1,33 +1,35 @@
 public class MyConnectFour {
 	private Board board;
 	private User user;
-	private Computer computer;
-	private char player1Symbol = 'r';
-	private char player2Symbol = 'y';
+	private Computer computerOne;
+	private Computer computerTwo;
+	private String[] playerNames = { "Player1", "Computer1", "Computer2" };
+	private char[] playerSymbols = { 'r', 'y', 'b' };
 
 	public MyConnectFour() {
-		board = new Board(player1Symbol, player2Symbol);
-		user = new User(board, player1Symbol, true);
-		computer = new Computer(board, player2Symbol, false);
+		board = new Board(playerSymbols);
+		user = new User(board, playerNames, 0);
+		computerOne = new Computer(board, playerNames, 1);
+		computerTwo = new Computer(board, playerNames, 2);
 		playGame();
 	}
 
 	private void playGame() {
 		PrintHelper.displayFirstMsg();
 		board.printBoard();
-		boolean win = false;
-		boolean hasWon;
+		String winnerName = "";
+		Player[] playerTurnOrder = { user, computerOne, computerTwo };
 
-		while (!win) {
-			hasWon = user.getWon(user);
-			if (hasWon) {
-				win = true;
-			} else {
-				hasWon = computer.getWon(computer);
+		while (winnerName == "") {
+			for (Player player : playerTurnOrder) {
+				player.putPosition(player);
+				if (player.hasWinPosition()) {
+					winnerName = player.getPlayerName();
+					break;
+				}
 			}
 		}
 
-		PrintHelper.displayWinMsg();
+		PrintHelper.displayWinMsg(winnerName);
 	}
-
 }

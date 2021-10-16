@@ -1,39 +1,46 @@
 abstract class Player {
     private Board board;
-    private char mySymbol;
-    private boolean isPlayer1;
+    private String[] playerName;
+    private int playerIndex;
 
-    public Player(Board board, char mySymbol, boolean isPlayer1) {
+    public Player(Board board, String[] playerName, int playerIndex) {
         this.board = board;
-        this.mySymbol = mySymbol;
-        this.isPlayer1 = isPlayer1;
+        this.playerName = playerName;
+        this.playerIndex = playerIndex;
     }
 
-    public abstract int getInputNum();
+    public abstract int getPositionNum();
+
+    public String getPlayerName() {
+        return playerName[playerIndex];
+    }
 
     public boolean isOutOfBoard(int position) {
         boolean isFullPosition = board.isFullColumn(position);
-        if (isFullPosition && isPlayer1) {
+        if (isFullPosition && playerIndex == 0) {
             PrintHelper.displayErrorUnabledPut();
         }
 
         return isFullPosition;
     }
 
-    public boolean getWon(Player player) {
-        PrintHelper.showTurnMsg(isPlayer1 ? "Player1" : "Computer");
+    public void putPosition(Player player) {
+        PrintHelper.showTurnMsg(getPlayerName());
 
         boolean isNotFullColumn = true;
+        // MEMO: check non-exsisting board position number at first
         int position = 9999;
 
         while (isNotFullColumn) {
-            position = player.getInputNum();
+            position = player.getPositionNum();
             isNotFullColumn = isOutOfBoard(position);
         }
 
-        board.placeCounter(isPlayer1, position);
+        board.placeCounter(playerIndex, position);
         board.printBoard();
+    }
 
-        return board.check4Placement(mySymbol);
+    public boolean hasWinPosition() {
+        return board.check4Placement(playerIndex);
     }
 }
