@@ -18,7 +18,7 @@ abstract class Player {
     public boolean isOutOfBoard(int position) {
         boolean isFullPosition = board.isFullColumn(position);
         if (isFullPosition && playerIndex == 0) {
-            PrintHelper.displayErrorUnabledPut();
+            PrintHelper.showErrorUnabledPut();
         }
 
         return isFullPosition;
@@ -41,6 +41,6 @@ abstract class Player {
     }
 
     public boolean hasWinPosition() {
-        return board.check4Placement(playerIndex);
+        return board.checkNPlacement(playerIndex);
     }
 }

@@ -6,6 +6,6 @@ public class User extends Player {
     // @Override
     public int getPositionNum() {
         Input input = new Input();
-        return input.getUserInput();
+        return input.getPositionInput();
     }
 }

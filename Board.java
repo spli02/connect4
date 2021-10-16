@@ -1,10 +1,12 @@
 public class Board {
     private char[][] board;
     private char[] playerSymbols;
+    private int connectN;
 
-    public Board(char[] playerSymbols) {
+    public Board(char[] playerSymbols, int connectN) {
         board = new char[6][7];
         this.playerSymbols = playerSymbols;
+        this.connectN = connectN;
     }
 
     private char hasPositionSymbol(char positionSymbol) {
@@ -67,7 +69,7 @@ public class Board {
             for (int j = 0; j < board[i].length; j++) {
                 if (board[i][j] == symbol) {
                     count = count + 1;
-                    if (count >= 4) {
+                    if (count >= connectN) {
                         return true;
                     }
                 } else {
@@ -85,7 +87,7 @@ public class Board {
             for (int j = 0; j < board.length; j++) {
                 if (board[j][i] == symbol) {
                     count = count + 1;
-                    if (count >= 4) {
+                    if (count >= connectN) {
                         return true;
                     }
                 } else {
@@ -102,7 +104,7 @@ public class Board {
         for (int i = 0; i < board.length - 1; i++) {
             for (int j = 0; j < board[0].length - 1; j++) {
                 count = 0;
-                for (int offset = 0; offset < 4; offset++) {
+                for (int offset = 0; offset < connectN; offset++) {
                     int row = i + offset;
                     int col = isRightDiagonal ? j - offset : j + offset;
 
@@ -116,7 +118,7 @@ public class Board {
                     if (board[row][col] == symbol) {
                         count++;
 
-                        if (count >= 4) {
+                        if (count >= connectN) {
                             return true;
                         }
                     }
@@ -127,7 +129,7 @@ public class Board {
         return false;
     }
 
-    public boolean check4Placement(int playerIndex) {
+    public boolean checkNPlacement(int playerIndex) {
         char playerSymbol = playerSymbols[playerIndex];
         return checkHorizontal(playerSymbol) || checkVertical(playerSymbol) || checkDiagonal(playerSymbol, true)
                 || checkDiagonal(playerSymbol, false);
