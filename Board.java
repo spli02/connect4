@@ -1,21 +1,29 @@
 public class Board {
     private char[][] board;
-    private char player1Symbol;
-    private char player2Symbol;
+    private char[] playerSymbols;
 
-    public Board(char player1Symbol, char player2Symbol) {
+    public Board(char[] playerSymbols) {
         board = new char[6][7];
-        this.player1Symbol = player1Symbol;
-        this.player2Symbol = player2Symbol;
+        this.playerSymbols = playerSymbols;
+    }
+
+    private char hasPositionSymbol(char positionSymbol) {
+        char symbol = ' ';
+        for (char playerSymbol : playerSymbols) {
+            if (playerSymbol == positionSymbol) {
+                symbol = playerSymbol;
+            }
+        }
+
+        return symbol;
     }
 
     public void printBoard() {
         for (int i = 0; i < board.length; i++) {
             for (int j = 0; j < board[i].length; j++) {
-                if (board[i][j] == player1Symbol) {
-                    System.out.print("| " + player1Symbol + " ");
-                } else if (board[i][j] == player2Symbol) {
-                    System.out.print("| " + player2Symbol + " ");
+                char symbol = hasPositionSymbol(board[i][j]);
+                if (symbol != ' ') {
+                    System.out.print("| " + symbol + " ");
                 } else {
                     System.out.print("|   ");
                 }
@@ -25,16 +33,27 @@ public class Board {
         System.out.println("  1   2   3   4   5   6   7");
     }
 
-    public void placeCounter(boolean isPlayer1, int position) {
+    private boolean hasOpponentSymbol(char positionSymbol, char mySymbol) {
+        boolean hasOpponentSymbol = false;
+        for (char symbol : playerSymbols) {
+            if (symbol == positionSymbol && symbol != mySymbol) {
+                hasOpponentSymbol = true;
+            }
+        }
+
+        return hasOpponentSymbol;
+    }
+
+    public void placeCounter(int playerIndex, int position) {
         boolean placed = false;
-        char mySymbol = isPlayer1 ? player1Symbol : player2Symbol;
-        char opponentSymbol = isPlayer1 ? player2Symbol : player1Symbol;
+        char mySymbol = playerSymbols[playerIndex];
 
         for (int i = board.length - 1; i >= 0; i--) {
             if (!placed) {
-                if (board[i][position - 1] == opponentSymbol) {
+                char checkPositionSymbol = board[i][position - 1];
+                if (hasOpponentSymbol(checkPositionSymbol, mySymbol)) {
                     // skip
-                } else if (board[i][position - 1] != mySymbol) {
+                } else if (checkPositionSymbol != mySymbol) {
                     board[i][position - 1] = mySymbol;
                     placed = true;
                 }
@@ -43,36 +62,31 @@ public class Board {
     }
 
     public boolean checkHorizontal(char symbol) {
-        boolean hasWon = false;
         int count = 0;
-
         for (int i = 0; i < board.length; i++) {
             for (int j = 0; j < board[i].length; j++) {
                 if (board[i][j] == symbol) {
                     count = count + 1;
                     if (count >= 4) {
-                        hasWon = true;
+                        return true;
                     }
                 } else {
                     count = 0;
                 }
             }
-
         }
 
-        return hasWon;
+        return false;
     }
 
     public boolean checkVertical(char symbol) {
-        boolean hasWon = false;
         int count = 0;
-
         for (int i = 0; i < board[0].length; i++) {
             for (int j = 0; j < board.length; j++) {
                 if (board[j][i] == symbol) {
                     count = count + 1;
                     if (count >= 4) {
-                        hasWon = true;
+                        return true;
                     }
                 } else {
                     count = 0;
@@ -80,15 +94,52 @@ public class Board {
             }
         }
 
-        return hasWon;
+        return false;
     }
 
-    public boolean check4Placement(char symbol) {
-        return checkHorizontal(symbol) || checkVertical(symbol);
+    public boolean checkDiagonal(char symbol, boolean isRightDiagonal) {
+        int count = 0;
+        for (int i = 0; i < board.length - 1; i++) {
+            for (int j = 0; j < board[0].length - 1; j++) {
+                count = 0;
+                for (int offset = 0; offset < 4; offset++) {
+                    int row = i + offset;
+                    int col = isRightDiagonal ? j - offset : j + offset;
+
+                    if (row < 0 || row > board.length - 1) {
+                        break;
+                    }
+                    if (col < 0 || col > board[0].length - 1) {
+                        break;
+                    }
+
+                    if (board[row][col] == symbol) {
+                        count++;
+
+                        if (count >= 4) {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
+    public boolean check4Placement(int playerIndex) {
+        char playerSymbol = playerSymbols[playerIndex];
+        return checkHorizontal(playerSymbol) || checkVertical(playerSymbol) || checkDiagonal(playerSymbol, true)
+                || checkDiagonal(playerSymbol, false);
     }
 
     public boolean isFullColumn(int position) {
         char boardValue = board[0][position - 1];
-        return boardValue == player1Symbol || boardValue == player2Symbol;
+        for (char symbol : playerSymbols) {
+            if (boardValue == symbol) {
+                return true;
+            }
+        }
+        return false;
     }
 }

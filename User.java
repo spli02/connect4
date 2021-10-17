@@ -1,10 +1,10 @@
 public class User extends Player {
-    public User(Board board, char mySymbol, boolean isPlayer1) {
-        super(board, mySymbol, isPlayer1);
+    public User(Board board, String[] playerNames, int playerIndex) {
+        super(board, playerNames, playerIndex);
     }
 
     // @Override
-    public int getInputNum() {
+    public int getPositionNum() {
         Input input = new Input();
         return input.getUserInput();
     }

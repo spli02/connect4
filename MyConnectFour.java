@@ -2,32 +2,32 @@ public class MyConnectFour {
 	private Board board;
 	private User user;
 	private Computer computer;
-	private char player1Symbol = 'r';
-	private char player2Symbol = 'y';
+	private String[] playerNames = { "User1", "Computer1" };
+	private char[] playerSymbols = { 'r', 'y' };
 
 	public MyConnectFour() {
-		board = new Board(player1Symbol, player2Symbol);
-		user = new User(board, player1Symbol, true);
-		computer = new Computer(board, player2Symbol, false);
+		board = new Board(playerSymbols);
+		user = new User(board, playerNames, 0);
+		computer = new Computer(board, playerNames, 1);
 		playGame();
 	}
 
 	private void playGame() {
 		PrintHelper.displayFirstMsg();
 		board.printBoard();
-		boolean win = false;
-		boolean hasWon;
+		String winnerName = "";
+		Player[] playerTurnOrder = { user, computer };
 
-		while (!win) {
-			hasWon = user.getWon(user);
-			if (hasWon) {
-				win = true;
-			} else {
-				hasWon = computer.getWon(computer);
+		while (winnerName == "") {
+			for (Player player : playerTurnOrder) {
+				player.putPosition(player);
+				if (player.hasWinPosition()) {
+					winnerName = player.getPlayerName();
+					break;
+				}
 			}
 		}
 
-		PrintHelper.displayWinMsg();
+		PrintHelper.displayWinMsg(winnerName);
 	}
-
 }

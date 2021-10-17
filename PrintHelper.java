@@ -9,15 +9,15 @@ public class PrintHelper {
         System.out.println("");
     }
 
-    public static void displayWinMsg() {
-        System.out.println("You Have Won!!!");
+    public static void displayWinMsg(String winnerName) {
+        System.out.println(winnerName + " Have Won!!!");
     }
 
     public static void integerOnlyMsg() {
         System.out.println("Integers only, please.");
     }
 
-    public static void showTurnMsg(String playerName) {
+    public static void displayTurnMsg(String playerName) {
         System.out.println("It's " + playerName + "'s turn.");
     }
 
