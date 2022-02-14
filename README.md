@@ -1,2 +1,2 @@
 # Connect4
-Java Connect4 - UoB assignment
+Java - Connect4
